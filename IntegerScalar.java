@@ -29,14 +29,18 @@ public class IntegerScalar extends Scalar {
     @Override
     public Scalar power(int exponent) {
         Scalar ans = new IntegerScalar(1);
+        if (exponent == 0){
+            return ans;
+        }
         if (exponent == 1){
             return new IntegerScalar(number);
         }
-        ans = ans.mul(power(exponent/2));
+        Scalar powerHalf = power(exponent/2);
+        ans = powerHalf.mul(powerHalf);
         if (exponent%2 == 1){
             ans = ans.mul(new IntegerScalar(number));
         }
-
+        return ans;
     }
 
     @Override
