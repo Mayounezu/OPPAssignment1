@@ -45,17 +45,33 @@ public class IntegerScalar extends Scalar {
 
     @Override
     public int sign() {
-        return 0;
+        if (number < 0){
+            return -1;
+        }
+        else if (number > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     @Override
     public boolean equals(Object o) {
+        if (o instanceof Scalar){
+            if (o instanceof RationalScalar){
+                ((RationalScalar) o).reduce(); // isn't a must since by design it should always be reduced but still its for safety
+            }
+            int den = ((Scalar) o).getDenominator();
+            int num = ((Scalar) o).getNumerator();
+            return den == getDenominator() && num == getNumerator();
+        }
         return false;
     }
 
     @Override
     public String toString() {
-        return null;
+        return "" + number;
     }
 
     @Override
