@@ -93,12 +93,12 @@ public class RationalScalar extends Scalar {
 
     @Override
     public int getNumerator() {
-        return 0;
+        return numerator;
     }
 
     @Override
     public int getDenominator() {
-        return 0;
+        return denominator;
     }
 
     // helper methods:
