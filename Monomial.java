@@ -70,4 +70,9 @@ public class Monomial {
         }
         return coeffStr + "x^" + this.exponent;
     }
+
+    //helper function
+    public int getExponent() {
+        return this.exponent;
+    }
 }

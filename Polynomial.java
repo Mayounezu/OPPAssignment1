@@ -1,6 +1,9 @@
+package calculator;
+
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 public class Polynomial {
     private Collection<Monomial> monomials;
@@ -10,31 +13,34 @@ public class Polynomial {
     }
 
     private void addMonomial(Monomial m) {
-        if (m.sign() != 0) {
-            Collection<Monomial> updated = new ArrayList<>();
-            boolean merged = false;
+        if (m.sign() == 0) {
+            return;
+        }
 
-            for (Monomial current : this.monomials) {
-                if (!merged) {
-                    Monomial sum = current.add(m);
-                    if (sum != null) {
-                        if (sum.sign() != 0) {
-                            updated.add(sum);
-                        }
-                        merged = true;
-                    } else {
-                        updated.add(current);
-                    }
+        List<Monomial> list = (List<Monomial>) this.monomials;
+        boolean merged = false;
+
+        for (int i = 0; i < list.size(); i++) {
+            Monomial current = list.get(i);
+            Monomial sum = current.add(m);
+
+            if (sum != null) {
+                if (sum.sign() == 0) {
+                    list.remove(i);
                 } else {
-                    updated.add(current);
+                    list.set(i, sum);
                 }
+                merged = true;
+                break;
+            } else if (m.getExponent() < current.getExponent()) {
+                list.add(i, m);
+                merged = true;
+                break;
             }
+        }
 
-            if (!merged) {
-                updated.add(m);
-            }
-
-            this.monomials = updated;
+        if (!merged) {
+            list.add(m);
         }
     }
 
@@ -105,15 +111,12 @@ public class Polynomial {
         if (this.monomials.size() != other.monomials.size()) {
             return false;
         }
-        for (Monomial m1 : this.monomials) {
-            boolean found = false;
-            Iterator<Monomial> it = other.monomials.iterator();
-            while (it.hasNext() && !found) {
-                if (m1.equals(it.next())) {
-                    found = true;
-                }
-            }
-            if (!found) {
+        
+        Iterator<Monomial> it1 = this.monomials.iterator();
+        Iterator<Monomial> it2 = other.monomials.iterator();
+        
+        while (it1.hasNext() && it2.hasNext()) {
+            if (!it1.next().equals(it2.next())) {
                 return false;
             }
         }
@@ -127,6 +130,7 @@ public class Polynomial {
         }
         StringBuilder sb = new StringBuilder();
         boolean first = true;
+        
         for (Monomial m : this.monomials) {
             String term = m.toString();
             if (first) {
@@ -134,14 +138,9 @@ public class Polynomial {
                 first = false;
             } else {
                 if (m.sign() > 0) {
-                    sb.append(" + ").append(term);
+                    sb.append("+").append(term);
                 } else if (m.sign() < 0) {
-                    sb.append(" - ");
-                    if (term.startsWith("-")) {
-                        sb.append(term.substring(1));
-                    } else {
-                        sb.append(term);
-                    }
+                    sb.append(term);
                 }
             }
         }
