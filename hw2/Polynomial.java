@@ -1,4 +1,4 @@
-package calculator;
+package hw2;
 
 import java.util.Collection;
 import java.util.ArrayList;
